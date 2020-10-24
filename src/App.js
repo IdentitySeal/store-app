@@ -4,7 +4,6 @@ import './App.css';
 import {
   Switch,
   Route,
-  Link
 } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ProductList from './components/ProductList';
