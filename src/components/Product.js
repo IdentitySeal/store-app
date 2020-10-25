@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import {Link } from "react-router-dom";
-// import { ProductConsumer } from '../context/ProductContext';
+import { ProductConsumer } from '../context/ProductContext';
 import PropTypes from 'prop-types'
+// import { ProductConsumer } from '../context/ProductContext';
 
  
 export default class Product extends Component {
@@ -10,17 +11,20 @@ export default class Product extends Component {
         const {id,title,img,price,inCart} = this.props.product
         return (
             <ProductContainer className= "col-9 mx-auto col-md-6  col-lg-3">
-               <div className = "card mb-5">
-                   <div className = "img-container p-5" onClick= {()=>{console.log('image clicked')}}>
+                <div className = "card mb-5">  
+                <ProductConsumer>
+               {value => (
+                   <React.Fragment>
+                <div className = "img-container p-5" onClick= {()=> value.handeleDetail(id)}>
                         <Link to ="/details">
                             <img src={img} alt="Product" className ="card-img-top"/>
                         </Link>
-                        <button className="cart-btn" disabled = {inCart ? true : false} onClick = {()=>{console.log('added to cart')}}>
+                        <button className="cart-btn" disabled = {inCart ? true : false} onClick = {()=> value.addToCart(id)}>
                         {inCart ? <p className = "text-capitalize mb-0 "> inCart </p> :
                         <i className ="fa fa-cart-plus" ></i>}
                         </button>
                     </div>
-                   {/* card-footer */}
+                    
                     <div className="card-footer d-flex justify-content-between">
                         <p className = "align-self-center mb-0">
                             {title}
@@ -30,7 +34,11 @@ export default class Product extends Component {
                             {price}
                         </h5>
                     </div>
-               </div>
+                    </React.Fragment>
+               
+               )}
+               </ProductConsumer>                 
+                </div>
             </ProductContainer>
         
         )

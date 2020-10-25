@@ -12,7 +12,7 @@ import Details from './components/Details';
 import Default from "./components/Default";
 
 
-
+// 3hr 25 min
 
 function App() {
   return (
