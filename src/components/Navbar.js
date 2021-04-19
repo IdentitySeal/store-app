@@ -1,11 +1,14 @@
-import React, { Component } from "react"
+import React, { useContext } from "react"
+import { ProductContext } from '../context/ProductContext';
+
 import { Link } from "react-router-dom"
 import styled from "styled-components"
-import {Button} from "../components/Button"
-import Logo from "../../src/logo.svg"
-export default class Navbar extends Component {
+import { Button } from "../components/Button"
 
-    render() {
+import Logo from "../../src/logo.svg"
+const Navbar = () => {
+    const { cartItems } = useContext(ProductContext)
+
         return (
             <NavWrapper className=" navbar navbar-expand-sm navbar-dark px-sm-5">
                 <Link to='/'>
@@ -21,14 +24,15 @@ export default class Navbar extends Component {
                 <Link to="/cart" className="ml-auto">
                     <Button>
                         <span className="pr-2 fa fa-cart-plus"></span>
-                        cart
+                        {cartItems.length}
                     </Button>
                 </Link>
             </NavWrapper>
         )
-
-    }
 }
+
+ export default Navbar
+
 const NavWrapper = styled.nav `
 background-color: var(--mainBlue);
 .nav-link{

@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import {Link } from "react-router-dom";
-import { ProductConsumer } from '../context/ProductContext';
+import { ProductContext } from '../context/ProductContext';
 import PropTypes from 'prop-types'
 // import { ProductConsumer } from '../context/ProductContext';
 
  
-export default class Product extends Component {
-    render() {
-        const {id,title,img,price,inCart} = this.props.product
+const Product = ({product}) => {
+    
+    const { handeleDetail, addToCart} = useContext(ProductContext)
+
+        const {id,title,img,price,inCart} = product
         return (
             <ProductContainer className= "col-9 mx-auto col-md-6  col-lg-3">
                 <div className = "card mb-5">  
-                <ProductConsumer>
-               {value => (
                    <React.Fragment>
-                <div className = "img-container p-5" onClick= {()=> value.handeleDetail(id)}>
+                <div className = "img-container p-5" onClick= {()=> handeleDetail(id)}>
                         <Link to ="/details">
                             <img src={img} alt="Product" className ="card-img-top"/>
                         </Link>
-                        <button className="cart-btn" disabled = {inCart ? true : false} onClick = {()=> value.addToCart(id)}>
+                        <button className="cart-btn" disabled = {inCart ? true : false} onClick = {()=> addToCart(id)}>
                         {inCart ? <p className = "text-capitalize mb-0 "> inCart </p> :
                         <i className ="fa fa-cart-plus" ></i>}
                         </button>
@@ -36,14 +36,13 @@ export default class Product extends Component {
                     </div>
                     </React.Fragment>
                
-               )}
-               </ProductConsumer>                 
                 </div>
             </ProductContainer>
         
         )
-    }
 }
+export default Product;
+
 Product.propTypes = {
     product:PropTypes.shape({
         id: PropTypes.number,

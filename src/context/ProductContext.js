@@ -1,6 +1,5 @@
-import React, { Component } from 'react'
-import Product from '../components/Product'
-import {detailProduct, storeProducts} from '../../src/data';
+import React, { useEffect,useState } from 'react'
+import {detailedProduct, storeProducts} from '../../src/data';
 
 const  ProductContext = React.createContext()
 
@@ -8,55 +7,92 @@ const  ProductContext = React.createContext()
 // Consumer - grabs data
 
 // Product Provider
-class ProductProvider extends Component {
-    state = {
-        products: [],
-        detailProduct:detailProduct
-    }
-    componentDidMount = () => {
-        this.setProducts();
-    }
-    setProducts = () =>{
-        let temmProducts =[]
+
+const ProductProvider = ({children}) => {
+    const [products,setProducts] = useState ([])
+    const [detailProduct, setDetailProduct] = useState(detailedProduct)
+    const[cartItems,setCartItems] =useState([])
+    
+    useEffect(() => {
+        setProduct()
+    },[]) 
+        
+    const setProduct = () => {
+        let temmProducts = []
         storeProducts.forEach(item => {
-        const singleItem ={...item};
-        temmProducts = [...temmProducts,singleItem]
+            const singleItem = { ...item };
+            temmProducts = [...temmProducts, singleItem]
         })
-        this.setState (() =>{
-            return { products : temmProducts};
-        })
+        setProducts(temmProducts)
+
+        
     }
-    findProductId = (id) =>{
-        const product = this.state.products.find( item => item.id === id);
+    const findProductId = (id) => {
+        const product = products.find(item => item.id === id);
         return product
     }
-    handeleDetail = (id) =>{
-        const product =this.findProductId(id);
-        this.setState(()=>{
-            return {detailProduct : product}
-        })
+    const handeleDetail = (id) => {
+        const product = findProductId(id);
+            return setDetailProduct(product)
+       
     }
-    addToCart= (id) =>{
-        let tempProduct
-    }
-    render() {
+    const addToCart = id => {
+        let tempProducts = products;
+        const index = tempProducts.indexOf(findProductId(id));
+        const product = tempProducts[index];
+        product.inCart = true;
+        product.count = 1;
+        const price = product.price;
+        product.total = price;
+
+        setProducts(tempProducts)
+
+
+        // cartItems.push(product)
+
+        cartItems[cartItems.length] = product
+        // this works
+
+        setDetailProduct(product)
+        console.log(cartItems)
+
+
+    };
+    
         return (
             // return provider
-            <ProductContext.Provider value={
-                { 
-                ...this.state,
-                handeleDetail:this.handeleDetail,
-                addToCart:this.addToCart
-                }
-            }>
+            <ProductContext.Provider value={{
+                products,
+                handeleDetail,
+                addToCart,
+                detailProduct,
+                cartItems
+            }}>
                 {/* return all the children that is going to be in our application  */}
-                {this.props.children}
+                {children}
             </ProductContext.Provider>
         )
-    }
 }
 
 // Product Consumer
-const ProductConsumer = ProductContext.Consumer
+export { ProductProvider, ProductContext };
 
-export {ProductProvider,ProductConsumer};
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
