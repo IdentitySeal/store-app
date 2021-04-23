@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export default class Default extends Component {
-    render() {
-        return (
-            <div>
-                Page not Found
-            </div>
+const Default = ()=> {
+    return (
+        <div>
+            Page not Found
+        </div>
         )
-    }
 }
+
+export default Default

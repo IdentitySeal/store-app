@@ -11,11 +11,18 @@ const  ProductContext = React.createContext()
 const ProductProvider = ({children}) => {
     const [products,setProducts] = useState ([])
     const [detailProduct, setDetailProduct] = useState(detailedProduct)
-    const[cartItems,setCartItems] =useState([])
+    const [cartItems, setCartItems] = useState([])
+    const [total, setTotal] = useState()
+    const [tax, setTax] = useState()
+    const [subtotal, setSubTotal] = useState()
+    const [color,setColor] = useState()
+
+    
+    const [favorite,setFavorite] = useState([])
     
     useEffect(() => {
         setProduct()
-    },[]) 
+    }, [])
         
     const setProduct = () => {
         let temmProducts = []
@@ -37,7 +44,7 @@ const ProductProvider = ({children}) => {
        
     }
     const addToCart = id => {
-        let tempProducts = products;
+        let tempProducts = [...products];
         const index = tempProducts.indexOf(findProductId(id));
         const product = tempProducts[index];
         product.inCart = true;
@@ -56,8 +63,142 @@ const ProductProvider = ({children}) => {
         setDetailProduct(product)
         console.log(cartItems)
 
+        totalCostOfCartItems()
 
     };
+
+
+
+    const addToFavorite = (id) => {
+        let tempCartItems = [...cartItems]
+        const index = tempCartItems.indexOf(findCartItemId(id))
+        console.log(index)
+        // selecting the product gon gon 
+        const product = tempCartItems[index]
+
+        if (product.favorite === false) {
+            product.favorite = true
+            favorite[favorite.length] = product
+            console.log(favorite)
+            setColor("text-danger")
+        }
+        else {
+            product.favorite = false
+
+            const removeFavorite = favorite.filter(item => item.id !== id)
+            
+            console.log(removeFavorite)
+            setFavorite(removeFavorite)
+            setColor("text-muted")
+            
+        }
+
+    }
+
+    const findCartItemId = (id) => {
+        const cartItem = cartItems.find(item => item.id === id);
+        return cartItem
+    }
+
+
+    const cartIncrement = (id) => {
+        let tempCartItems = [...cartItems]
+        // const selectedItem = tempCartItems.find(item => item.id === id)
+        const index = tempCartItems.indexOf(findCartItemId(id))
+        // selecting the product gon gon 
+        const product = tempCartItems[index]
+        product.count = product.count + 1;
+        product.total = product.price * product.count;
+
+        setCartItems(tempCartItems)
+        totalCostOfCartItems()
+
+    }
+    const cartDecrement = (id) => {
+        let tempCartItems = [...cartItems]
+        // const selectedItem = tempCartItems.find(item => item.id === id)
+        const index = tempCartItems.indexOf(findCartItemId(id))
+        // selecting the product gon gon
+        const product = tempCartItems[index]
+        product.count = product.count - 1;
+
+        if (product.count === 0) {
+            removeCartItem(id)
+        }
+        else {
+            product.total = product.price * product.count
+            setCartItems(tempCartItems)
+        }
+        totalCostOfCartItems()
+
+    }
+
+    const removeCartItem = (id) => {
+        let tempProducts = [...products];
+
+        let tempCartItems = [...cartItems]
+
+        const index = tempProducts.indexOf(findProductId(id))
+        console.log(index)
+        // selecting the product gon gon 
+        let productToBeRemoved = tempProducts[index]
+        productToBeRemoved.inCart = false;
+        productToBeRemoved.count = 0;
+        productToBeRemoved.total = productToBeRemoved.price * productToBeRemoved.count;
+
+        tempCartItems = tempCartItems.filter(item => {
+            return item.id !== id;
+        });
+
+        setCartItems([...tempCartItems])
+        // console.log(cartItems)
+        setProduct([...tempProducts])
+
+    }
+
+    const totalCostOfCartItems = () => {
+        let arr = []
+
+        const cart = cartItems.map(cartItem => {
+            // let totalForCart
+            return (cartItem.total)
+        })
+
+        arr.push(cart)
+
+       const  subtotal = arr[0].reduce((acc, curr) => {
+            acc = acc + curr;
+            return acc
+
+       })
+        
+        console.log(subtotal)
+
+
+
+        const tax = parseFloat((0.1 * subtotal).toFixed(2))
+        // console.log(tax.toFixed(2) + "tax")
+
+
+
+        const total = subtotal + tax
+
+        setTotal(total)
+
+        setSubTotal(subtotal)
+        setTax(tax)
+
+        console.log(subtotal , tax)
+
+
+
+
+    }
+
+
+
+
+
     
         return (
             // return provider
@@ -66,7 +207,15 @@ const ProductProvider = ({children}) => {
                 handeleDetail,
                 addToCart,
                 detailProduct,
-                cartItems
+                cartItems,
+                cartIncrement,
+                cartDecrement,
+                removeCartItem,
+                addToFavorite,
+                total,
+                tax,
+                subtotal
+                ,color
             }}>
                 {/* return all the children that is going to be in our application  */}
                 {children}

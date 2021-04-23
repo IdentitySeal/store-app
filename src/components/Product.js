@@ -50,6 +50,8 @@ Product.propTypes = {
         title: PropTypes.string,
         price: PropTypes.number,
         inCart: PropTypes.bool,
+        favorite: PropTypes.bool,
+
     }).isRequired
 }
 const ProductContainer = styled.div`
