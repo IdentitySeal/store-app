@@ -15,7 +15,7 @@ const ProductProvider = ({children}) => {
     const [total, setTotal] = useState()
     const [tax, setTax] = useState()
     const [subtotal, setSubTotal] = useState()
-    const [color,setColor] = useState()
+    const [color,setColor] = useState("text-muted")
 
     
     const [favorite,setFavorite] = useState([])
@@ -80,7 +80,6 @@ const ProductProvider = ({children}) => {
             product.favorite = true
             favorite[favorite.length] = product
             console.log(favorite)
-            setColor("text-danger")
         }
         else {
             product.favorite = false
@@ -89,11 +88,11 @@ const ProductProvider = ({children}) => {
             
             console.log(removeFavorite)
             setFavorite(removeFavorite)
-            setColor("text-muted")
             
         }
 
     }
+   
 
     const findCartItemId = (id) => {
         const cartItem = cartItems.find(item => item.id === id);
@@ -160,46 +159,26 @@ const ProductProvider = ({children}) => {
         let arr = []
 
         const cart = cartItems.map(cartItem => {
-            // let totalForCart
             return (cartItem.total)
         })
 
         arr.push(cart)
 
-       const  subtotal = arr[0].reduce((acc, curr) => {
+        const  subtotal = arr[0].reduce((acc, curr) => {
             acc = acc + curr;
             return acc
-
-       })
+        })
         
-        console.log(subtotal)
-
-
-
         const tax = parseFloat((0.1 * subtotal).toFixed(2))
-        // console.log(tax.toFixed(2) + "tax")
-
-
 
         const total = subtotal + tax
 
+        
         setTotal(total)
-
         setSubTotal(subtotal)
         setTax(tax)
-
-        console.log(subtotal , tax)
-
-
-
-
     }
 
-
-
-
-
-    
         return (
             // return provider
             <ProductContext.Provider value={{
@@ -215,7 +194,8 @@ const ProductProvider = ({children}) => {
                 total,
                 tax,
                 subtotal
-                ,color
+                , color,
+                setColor
             }}>
                 {/* return all the children that is going to be in our application  */}
                 {children}

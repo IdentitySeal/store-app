@@ -5,10 +5,8 @@ import styled from 'styled-components';
 
 
 const Cart = () => {
-    const { cartItems, cartIncrement, cartDecrement, removeCartItem, addToFavorite,tax,subtotal,total,color } = useContext(ProductContext)
-
-
-    // console.table( cartItems )
+    const { cartItems, cartIncrement, cartDecrement, removeCartItem, addToFavorite, tax, subtotal, total, color, setColor } = useContext(ProductContext)
+    
 
     
     return (
@@ -21,19 +19,24 @@ const Cart = () => {
                         <HeadingStyle>Shopping cart</HeadingStyle>
                         {
                             cartItems.map((cart) => {
-                                const { id, title, img, price, count, total } = cart
+                                const { id, title, img, price, count, total, favorite } = cart
+                                
+
+
                                 return (
                                     <div key={cart.id} className="card mb-3">
                                         <SpaceEvenly className=" row g-0" >
                                             <SpaceEvenly className="" >
                                                 <ImgContainer className="p-3 img-fluid" src={img} alt={img} />
-                                                <div >
+                                                <div>
                                                     <h6 className=" p-3">{title}</h6>
 
                                                     <BaseLineDiv className="mt-5 p-3">
                                                         <ColorRed type="button" onClick={() => removeCartItem(id)} className="mr-3"><i class="fa fa-trash-o fa-2x text-danger" aria-hidden="true"></i></ColorRed>
                                                         <FavSpan onClick={() => addToFavorite(id)} >
-                                                            <i class={`fa fa-heart-o fa-2x ${color}`} aria-hidden="true"></i>
+
+                                                            <i className="fa fa-heart-o fa-2x " aria-hidden="true"></i>
+                                                              
                                                         </FavSpan>
                                                     </BaseLineDiv>
 

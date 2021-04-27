@@ -10,6 +10,7 @@ import ProductList from './components/ProductList';
 import Cart from './components/Cart';
 import Details from './components/Details';
 import Default from "./components/Default";
+import GoogleLogin from '../src/components/GoogleLogin'
 
 
 // 3hr 25 min
@@ -17,6 +18,7 @@ import Default from "./components/Default";
 function App() {
   return (
     <React.Fragment>
+      <GoogleLogin/>
       <Navbar />
       <Switch>
         <Route exact path="/" component={ProductList}></Route>

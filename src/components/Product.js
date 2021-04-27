@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import {Link } from "react-router-dom";
 import { ProductContext } from '../context/ProductContext';
 import PropTypes from 'prop-types'
-// import { ProductConsumer } from '../context/ProductContext';
 
  
 const Product = ({product}) => {
