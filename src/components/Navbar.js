@@ -6,6 +6,9 @@ import styled from "styled-components"
 import { Button } from "../components/Button"
 
 import Logo from "../../src/logo.svg"
+
+import GoogleLogin from '../components/GoogleLogin'
+
 const Navbar = () => {
     const { cartItems } = useContext(ProductContext)
 
@@ -27,6 +30,11 @@ const Navbar = () => {
                         {cartItems.length}
                     </Button>
                 </Link>
+                <Link to="/" className="">
+                        <GoogleLogin/>
+                </Link>
+
+                
             </NavWrapper>
         )
 }

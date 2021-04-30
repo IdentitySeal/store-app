@@ -15,7 +15,8 @@ const ProductProvider = ({children}) => {
     const [total, setTotal] = useState()
     const [tax, setTax] = useState()
     const [subtotal, setSubTotal] = useState()
-    const [color,setColor] = useState("text-muted")
+
+    const [favButtonColor,setFavButtonColor] = useState('text-muted')
 
     
     const [favorite,setFavorite] = useState([])
@@ -70,24 +71,74 @@ const ProductProvider = ({children}) => {
 
 
     const addToFavorite = (id) => {
-        let tempCartItems = [...cartItems]
+        const tempCartItems = [...cartItems]
         const index = tempCartItems.indexOf(findCartItemId(id))
-        console.log(index)
         // selecting the product gon gon 
         const product = tempCartItems[index]
+
+        console.log(product.id)
+        console.log(id)
+
+
+
+        if (product.id !== id && product.favorite !== true) {
+            setFavButtonColor("text-danger")
+        } else (
+            setFavButtonColor("text-muted")
+
+        )
+
+        // console.log(index)
+        // console.log(product)
+
+       
+        // setFavButtonColor((oldColor) =>
+        //         oldColor === 'text-muted' ? 'text-danger' : 'text-muted'
+        // )
+        // product[index].favorite = favorite === false ? "text-dannger" : "text-muted"
+
+
 
         if (product.favorite === false) {
             product.favorite = true
             favorite[favorite.length] = product
+
+
+            console.log(id)
+
+
             console.log(favorite)
+            console.log(product.favorite)
+
+            
+
+
+
+            setFavorite([...favorite])
         }
         else {
             product.favorite = false
 
+
             const removeFavorite = favorite.filter(item => item.id !== id)
             
-            console.log(removeFavorite)
-            setFavorite(removeFavorite)
+        //     console.log(removeFavorite)
+            setFavorite([...removeFavorite])
+            console.log(product.favorite)
+
+            setFavButtonColor("text-muted")
+
+
+            // if (product.id === id) {
+            //     setFavButtonColor("text-muted")
+            //     console.log(favButtonColor)
+            // }
+            // else {
+            //     setFavButtonColor("text-danger")
+
+            // }
+
+
             
         }
 
@@ -193,9 +244,8 @@ const ProductProvider = ({children}) => {
                 addToFavorite,
                 total,
                 tax,
-                subtotal
-                , color,
-                setColor
+                subtotal,
+                favButtonColor
             }}>
                 {/* return all the children that is going to be in our application  */}
                 {children}

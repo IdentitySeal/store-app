@@ -1,14 +1,22 @@
 import React, { useContext }from 'react'
 import { ProductContext } from '../context/ProductContext';
+
+import firebase, { auth } from '../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import SignIn from '../components/GoogleLogin'
+
+
+import PaypalPayment from '../components/PaypalPayment'
 import styled from 'styled-components';
 
 
 
 const Cart = () => {
-    const { cartItems, cartIncrement, cartDecrement, removeCartItem, addToFavorite, tax, subtotal, total, color, setColor } = useContext(ProductContext)
-    
+    const { cartItems, cartIncrement, cartDecrement, removeCartItem, addToFavorite, tax, subtotal, total,setFavorite, favButtonColor } = useContext(ProductContext)
+          
+    const [user] = useAuthState(auth)
 
-    
+
     return (
     <>
         {
@@ -19,8 +27,12 @@ const Cart = () => {
                         <HeadingStyle>Shopping cart</HeadingStyle>
                         {
                             cartItems.map((cart) => {
-                                const { id, title, img, price, count, total, favorite } = cart
-                                
+                                const { id, title, img, price, count, total,favorite } = cart
+
+
+
+                                console.log(id)
+                                console.log(favorite)
 
 
                                 return (
@@ -33,9 +45,10 @@ const Cart = () => {
 
                                                     <BaseLineDiv className="mt-5 p-3">
                                                         <ColorRed type="button" onClick={() => removeCartItem(id)} className="mr-3"><i class="fa fa-trash-o fa-2x text-danger" aria-hidden="true"></i></ColorRed>
-                                                        <FavSpan onClick={() => addToFavorite(id)} >
+                                                        <FavSpan className={favButtonColor} onClick={() => addToFavorite(id)} >
 
                                                             <i className="fa fa-heart-o fa-2x " aria-hidden="true"></i>
+                                                            
                                                               
                                                         </FavSpan>
                                                     </BaseLineDiv>
@@ -61,12 +74,20 @@ const Cart = () => {
                                 )
                             })
                         }
-                        <div>
-                            <hr></hr>
-                            <h2>Subtotal : {subtotal}</h2>
+                        <FlexEnd className ="card p-5">
+                            {/* <hr></hr> */}
+                            <div>
+                            <h2>Subtotal : ${subtotal}</h2>
                             <h3>Tax : {tax}%</h3>
-                            <h1>Total : {total}</h1>
-                        </div>
+                            <h1>Total : ${total}</h1>
+                            
+                                
+                                {user ? <PaypalPayment
+                                    total={total} /> : <SignIn /> }
+
+
+                            </div>
+                        </FlexEnd>
                     </div>
         }
   </>
@@ -74,6 +95,9 @@ const Cart = () => {
         )
 }
 export default Cart
+
+
+
 
 const ImgContainer = styled.img`
 width : 200px;
@@ -84,6 +108,11 @@ const SpaceEvenly = styled.div
     `
     display:flex;
     justify-content:space-between;
+
+    @media (max-width:990px) {
+    background:red;
+  }
+
     
     `
 const IncrementButton = styled.button
@@ -97,7 +126,7 @@ const IncrementButton = styled.button
 const BaseLineDiv = styled.div
     `
     display: flex;
-    align-items: baseline;
+    flex-wrap: wrap;
     `
 const HeadingStyle = styled.h1
     `
@@ -112,34 +141,10 @@ const ColorRed = styled.a`
 const FavSpan = styled.span`
 color: ${props => (props.primary ? "red" : "grey")};
 `
-    // <div className="card mb-3">
-    // <div div className = "row g-0" >
-    //                         <div className="col-md-4">
-    //                             <img src="" alt="" />
-
-    //                         </div>
-    //                         <div className="col-md-8">
-    //                             <div className="card-body">
-    //                                 <h5 className="card-title">Card title</h5>
-    //                                 <p className="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-    //                                 <p className="card-text"><small className="text-muted">Last updated 3 mins ago</small></p>
-    //                             </div>
-    //                         </div>
-    //                     </div >
-    //                 </div >
+const FlexEnd = styled.div`
+display: flex;
+flex-direction: row-reverse;
 
 
+`
 
-
-// {
-//     cartItems.map((cart) => {
-//         const { title, img, price } = cart
-//         return (
-//             <ul key={cart.id}>
-//                 <li>{title}</li>
-//                 <li>{img}</li>
-//                 <li>{price}</li>
-//             </ul>
-//         )
-//     })
-// }
